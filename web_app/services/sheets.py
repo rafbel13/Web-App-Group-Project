@@ -134,6 +134,7 @@ class SpreadsheetService:
         self.create_records("orders", new_orders)
 
     def create_order(self, new_order:dict):
+        new_order["appointment_datetime"] = self.parse_timestamp(new_order["appointment_datetime"])
         self.create_records("orders", [new_order])
 
     def seed_products(self):
