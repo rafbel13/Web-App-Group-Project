@@ -9,7 +9,7 @@ DEFAULT_PRODUCTS = [
     {'id': 6, 'name': '________', 'description': '___________.', 'price': 0.99, 'url': '__________'},
     {'id': 7, 'name': '________', 'description': '___________.', 'price': 0.99, 'url': '__________'},
     {'id': 8, 'name': '________', 'description': '___________.', 'price': 0.99, 'url': '__________'},
-
+]
 
 class Product:
     def __init__(self, attrs):

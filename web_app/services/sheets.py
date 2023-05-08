@@ -43,11 +43,14 @@ class SpreadsheetService:
         return datetime.now(tz=timezone.utc)
 
     @staticmethod
-    def parse_timestamp(ts:str):
+    def parse_timestamp(ts: str):
         """
-            ts (str) : a timestamp string like '2023-03-08 19:59:16.471152+00:00'
+        ts (str) : a timestamp string like '2023-03-08 19:59:16.471152+00:00' or '2023-05-24 18:02:00.000000'
         """
-        date_format = "%Y-%m-%d %H:%M:%S.%f%z"
+        if '+' in ts or '-' in ts[-6:]:  # Checking for timezone
+            date_format = "%Y-%m-%d %H:%M:%S.%f%z"
+        else:
+            date_format = "%Y-%m-%d %H:%M:%S.%f"
         return datetime.strptime(ts, date_format)
 
     #
@@ -64,7 +67,7 @@ class SpreadsheetService:
 
     def get_records(self, sheet_name):
         """Gets all records from a sheet,
-            converts datetime columns back to Python datetime objects
+         converts datetime columns back to Python datetime objects
         """
         #print(f"GETTING RECORDS FROM SHEET: '{sheet_name}'")
         sheet = self.get_sheet(sheet_name) #> <class 'gspread.models.Worksheet'>
@@ -72,6 +75,8 @@ class SpreadsheetService:
         for record in records:
             if record.get("created_at"):
                 record["created_at"] = self.parse_timestamp(record["created_at"])
+            if record.get("appointment_datetime"):  # Add this condition
+                record["appointment_datetime"] = self.parse_timestamp(record["appointment_datetime"])  # Convert the string to a datetime object
         return sheet, records
 
     def get_products(self):
@@ -80,7 +85,7 @@ class SpreadsheetService:
 
     def get_orders(self):
         _, orders = self.get_records("orders")
-        return records
+        return orders
 
     def get_user_orders(self, user_email):
         _, orders = self.get_records("orders")
@@ -134,6 +139,10 @@ class SpreadsheetService:
         self.create_records("orders", new_orders)
 
     def create_order(self, new_order:dict):
+        # Convert the appointment_datetime string to a datetime object
+        appointment_datetime = self.parse_timestamp(new_order["appointment_datetime"])
+        # Convert the datetime object to a string
+        new_order["appointment_datetime"] = appointment_datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
         self.create_records("orders", [new_order])
 
     def seed_products(self):
