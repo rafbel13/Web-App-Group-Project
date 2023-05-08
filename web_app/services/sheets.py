@@ -85,7 +85,7 @@ class SpreadsheetService:
 
     def get_orders(self):
         _, orders = self.get_records("orders")
-        return records
+        return orders
 
     def get_user_orders(self, user_email):
         _, orders = self.get_records("orders")
