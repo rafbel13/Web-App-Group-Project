@@ -5,7 +5,7 @@
 
     <h1>Spa Services</h1>
 
-    <p class="lead">Learn more about our services at our award winning spa.</p>
+    <p class="lead">Open for appointments Mon-Sun 9am-6pm</p>
 
     {% if products|length > 0 %}
 
@@ -29,7 +29,7 @@
                                 <input type="hidden" name="product_price" value="{{ product.price }}">
                                 <input type="hidden" name="product_url" value="{{ product.url }}">
                                 <label for="appointment_datetime">Choose date and time for your booking:</label>
-                                <input type="datetime-local" name="appointment_datetime" id="apppointment_datetime" required>
+                                <input type="datetime-local" name="appointment_datetime" id="apppointment_datetime" step="1800" required>
                                 <button type="submit" class="btn btn-outline-primary">Book Now!</button>
                              </form>
 
@@ -46,5 +46,34 @@
         <p>Oops, no products found.</p>
 
     {% endif %}
+
+    <script>
+        function isTimeWithinRange(hours, minutes) {
+            const startHour = 9;
+            const endHour = 18;
+            return hours >= startHour && hours < endHour && minutes % 30 === 0;
+        }
+    
+        document.getElementById("apppointment_datetime").addEventListener("input", function (event) {
+            const input = event.target;
+            const datetimeString = input.value;
+            const date = new Date(datetimeString);
+            const dayOfWeek = date.getDay();
+    
+            // Check if the day is between Monday (1) and Sunday (7)
+            const isWithinAllowedDays = dayOfWeek >= 1 && dayOfWeek <= 7;
+    
+            // Check if the time is within the allowed range and in 30-minute increments
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const isWithinAllowedTime = isTimeWithinRange(hours, minutes);
+    
+            if (!isWithinAllowedDays || !isWithinAllowedTime) {
+                input.setCustomValidity("Please choose a date and time between Monday-Sunday, 9am-6pm, in 30-minute increments.");
+            } else {
+                input.setCustomValidity("");
+            }
+        });
+    </script>
 
 {% endblock %}
