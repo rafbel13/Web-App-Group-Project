@@ -28,6 +28,8 @@
                                 <input type="hidden" name="product_description" value="{{ product.description }}">
                                 <input type="hidden" name="product_price" value="{{ product.price }}">
                                 <input type="hidden" name="product_url" value="{{ product.url }}">
+                                <label for="appointment_datetime">Choose date and time for your booking:</label>
+                                <input type="datetime-local" name="appointment_datetime" id="apppointment_datetime" required>
                                 <button type="submit" class="btn btn-outline-primary">Book Now!</button>
                              </form>
 
