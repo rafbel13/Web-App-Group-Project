@@ -32,6 +32,7 @@ def create_order():
     product_id = form_data["product_id"]
     product_name = form_data["product_name"]
     product_price = form_data["product_price"]
+    appointment_datetime = form_data["appointment_datetime"]
 
     current_user = session.get("current_user")
     user_email = current_user["email"]
@@ -46,7 +47,8 @@ def create_order():
             "user_email": user_email,
             "product_id": int(product_id),
             "product_name": product_name,
-            "product_price": float(product_price)
+            "product_price": float(product_price),
+            "appointment_datetime": appointment_datetime
         }
         service.create_order(new_order)
         flash(f"Order received!", "success")
@@ -54,7 +56,7 @@ def create_order():
     except Exception as err:
         print(err)
         flash(f"Oops, something went wrong: {err}", "warning")
-        return redirect("/products")
+        return redirect("/services")
 
 
 @user_routes.route("/user/orders")
